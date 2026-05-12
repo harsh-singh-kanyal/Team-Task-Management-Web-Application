@@ -1,0 +1,10 @@
+{
+  "name": "ethara-task-manager",
+  "version": "1.0.0",
+  "description": "Team Task Manager",
+  "scripts": {
+    "install": "npm install --prefix server && npm install --prefix client",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server"
+  }
+}
