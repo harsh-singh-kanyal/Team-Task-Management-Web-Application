@@ -57,8 +57,8 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', env: process.env.N
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '../client/dist');
   app.use(express.static(clientBuildPath));
-  // Handle React Router - catch all non-API routes
-  app.get('*', (req, res) => {
+  // Handle React Router - catch all non-API routes (Express 5 compatible)
+  app.use((req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 }
