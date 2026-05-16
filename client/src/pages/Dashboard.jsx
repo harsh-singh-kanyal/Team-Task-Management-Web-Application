@@ -85,23 +85,26 @@ export default function Dashboard() {
         <div className="card" style={{ padding: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
             <h3 style={{ fontSize: 16, fontWeight: 600 }}>My Tasks</h3>
-            <Link to="/tasks" style={{ fontSize: 13, color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Link to="/tasks" style={{ fontSize: 13, color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: 4 }}>
               View all <ArrowRight size={14} />
             </Link>
           </div>
           {tasks.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {tasks.map(t => (
-                <div key={t._id} style={{ display: 'flex', justifyContent: 'space-between', padding: 12, background: 'var(--bg-default)', borderRadius: 8 }}>
-                  <div>
-                    <div style={{ fontWeight: 500, fontSize: 14, color: 'var(--text-primary)' }}>{t.title}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{t.project?.name || 'No project'}</div>
+              {tasks.map(t => {
+                const statusMap = { todo: 'badge-todo', in_progress: 'badge-progress', in_review: 'badge-review', done: 'badge-done' };
+                const badgeClass = statusMap[t.status] || 'badge-todo';
+                const statusLabel = (t.status || 'todo').replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
+                return (
+                  <div key={t._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 12, background: 'var(--bg-elevated)', borderRadius: 8 }}>
+                    <div>
+                      <div style={{ fontWeight: 500, fontSize: 14, color: 'var(--text-primary)' }}>{t.title}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{t.project?.name || 'No project'}</div>
+                    </div>
+                    <span className={`badge ${badgeClass}`}>{statusLabel}</span>
                   </div>
-                  <span className={`status-badge status-${t.status.replace(' ', '-').toLowerCase()}`}>
-                    {t.status}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>No tasks found.</div>
@@ -111,14 +114,14 @@ export default function Dashboard() {
         <div className="card" style={{ padding: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
             <h3 style={{ fontSize: 16, fontWeight: 600 }}>Recent Projects</h3>
-            <Link to="/projects" style={{ fontSize: 13, color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Link to="/projects" style={{ fontSize: 13, color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: 4 }}>
               View all <ArrowRight size={14} />
             </Link>
           </div>
           {projects.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {projects.map(p => (
-                <div key={p._id} style={{ padding: 16, background: 'var(--bg-default)', borderRadius: 8, borderLeft: `4px solid ${p.color || 'var(--primary-color)'}` }}>
+                <div key={p._id} style={{ padding: 16, background: 'var(--bg-elevated)', borderRadius: 8, borderLeft: `4px solid ${p.color || 'var(--accent-cyan)'}` }}>
                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.name}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 4 }}>{p.description || 'No description'}</div>
                 </div>
