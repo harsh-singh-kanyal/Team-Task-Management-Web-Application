@@ -11,9 +11,17 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem('token');
     if (token) {
       api.get('/auth/me')
-        .then(res => setUser(res.data.user))
-        .catch(() => localStorage.removeItem('token'))
-        .finally(() => setLoading(false));
+        .then(res => {
+          setUser(res.data.user);
+          setLoading(false);
+        })
+        .catch((err) => {
+          // Only clear token on 401 Unauthorized, not on network/server errors
+          if (err.response && err.response.status === 401) {
+            localStorage.removeItem('token');
+          }
+          setLoading(false);
+        });
     } else {
       setLoading(false);
     }
