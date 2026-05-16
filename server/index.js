@@ -1,6 +1,6 @@
 // Use Google DNS to resolve MongoDB Atlas SRV records (fixes local DNS issues)
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+// const dns = require('dns');
+// dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -64,4 +64,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`));
