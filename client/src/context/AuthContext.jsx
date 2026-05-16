@@ -10,18 +10,28 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
+      // Add a timeout to prevent infinite loading if the server is slow
+      const timeout = setTimeout(() => {
+        console.warn('Auth check timed out, proceeding as unauthenticated');
+        setLoading(false);
+      }, 5000);
+
       api.get('/auth/me')
         .then(res => {
+          clearTimeout(timeout);
           setUser(res.data.user);
           setLoading(false);
         })
         .catch((err) => {
+          clearTimeout(timeout);
           // Only clear token on 401 Unauthorized, not on network/server errors
           if (err.response && err.response.status === 401) {
             localStorage.removeItem('token');
           }
           setLoading(false);
         });
+
+      return () => clearTimeout(timeout);
     } else {
       setLoading(false);
     }
