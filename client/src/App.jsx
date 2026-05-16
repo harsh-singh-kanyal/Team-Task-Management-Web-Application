@@ -11,15 +11,26 @@ import Team from './pages/Team';
 import ManageTeam from './pages/ManageTeam';
 import AppLayout from './components/AppLayout';
 
+function LoadingScreen() {
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg, #00f0ff, #0066ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 800, color: 'white', margin: '0 auto 20px' }}>E</div>
+        <div style={{ color: 'var(--text-secondary)', fontSize: 16, fontWeight: 600 }}>Loading Ethara...</div>
+      </div>
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="auth-container"><div className="auth-card" style={{textAlign:'center'}}>Loading...</div></div>;
+  if (loading) return <LoadingScreen />;
   return user ? children : <Navigate to="/login" />;
 }
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <LoadingScreen />;
   return user ? <Navigate to="/dashboard" /> : children;
 }
 
