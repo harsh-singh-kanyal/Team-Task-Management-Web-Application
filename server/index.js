@@ -54,14 +54,12 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', env: process.env.NODE_ENV }));
 
 // Serve frontend in production (Railway serves both client + server together)
-if (process.env.NODE_ENV === 'production') {
-  const clientBuildPath = path.join(__dirname, '../client/dist');
-  app.use(express.static(clientBuildPath));
-  // Handle React Router - catch all non-API routes (Express 5 compatible)
-  app.use((req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });
-}
+const clientBuildPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientBuildPath));
+// Handle React Router - catch all non-API routes (Express 5 compatible)
+app.use((req, res) => {
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`));
