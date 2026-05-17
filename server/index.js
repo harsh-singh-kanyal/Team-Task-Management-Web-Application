@@ -55,10 +55,19 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', env: process.env.N
 
 // Serve frontend in production (Railway serves both client + server together)
 const clientBuildPath = path.join(__dirname, '../client/dist');
+const fs = require('fs');
+console.log(`📁 Serving static files from: ${clientBuildPath}`);
+if (!fs.existsSync(clientBuildPath)) {
+  console.warn('⚠️  client/dist not found — frontend was not built or build output is missing');
+}
 app.use(express.static(clientBuildPath));
-// Handle React Router - catch all non-API routes (Express 5 compatible)
-app.use((req, res) => {
-  res.sendFile(path.join(clientBuildPath, 'index.html'));
+// Handle React Router - serve index.html for all non-API routes
+app.use((req, res, next) => {
+  const indexPath = path.join(clientBuildPath, 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    return res.status(503).json({ error: 'Frontend not built. Run: npm run build --prefix client' });
+  }
+  res.sendFile(indexPath);
 });
 
 const PORT = process.env.PORT || 5000;
